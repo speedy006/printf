@@ -39,6 +39,21 @@ int string_conversion(va_list arg)
 }
 
 /**
+ * special_format - deals with %% specifier
+ * Return: count
+*/
+
+int special_format(void)
+{
+	char a;
+
+	a = '%';
+
+	write(STDOUT_FILENO, &a, 1);
+	return (1);
+}
+
+/**
  * _printf - produces output according to a format
  * @format: character string containing zero or more directives
  * Return: the number of characters printed
@@ -68,6 +83,11 @@ int _printf(const char *format, ...)
 			else if (format[a + 1] == 's')
 			{
 				count += string_conversion(arg);
+				a++;
+			}
+			else if (format[a + 1] == '%')
+			{
+				count += special_format();
 				a++;
 			}
 		}
