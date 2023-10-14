@@ -40,7 +40,7 @@ int string_conversion(va_list arg)
 
 /**
  * special_format - deals with %% specifier
- * Return: count
+ * Return: 1
 */
 
 int special_format(void)
@@ -51,6 +51,37 @@ int special_format(void)
 
 	write(STDOUT_FILENO, &a, 1);
 	return (1);
+}
+
+/**
+ * integer_conversion - deals with %d specifier
+ * @arg: argument
+ * Return: count
+*/
+
+int integer_conversion(va_list arg)
+{
+	int digit = va_arg(arg, int);
+	char numbers[20];
+	int count = 0, x;
+
+	if (digit < 0)
+	{
+		write(STDOUT_FILENO, "-", 1);
+		digit = -digit;
+		count++;
+	}
+
+	do {
+		numbers[count++] = '0' + (digit % 10);
+		digit /= 10;
+	} while (digit > 0);
+
+	for (x = count - 1; x >= 0; x--)
+	{
+		write(STDOUT_FILENO, &numbers[x], 1);
+	}
+	return (count);
 }
 
 /**
@@ -88,6 +119,11 @@ int _printf(const char *format, ...)
 			else if (format[a + 1] == '%')
 			{
 				count += special_format();
+				a++;
+			}
+			else if (format[a + 1] == 'd')
+			{
+				count += integer_conversion(arg);
 				a++;
 			}
 		}
