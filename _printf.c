@@ -18,6 +18,27 @@ int char_conversion(va_list arg)
 }
 
 /**
+ * string_conversion - deals with %s specifier
+ * @arg: argument
+ * Return: count
+*/
+
+int string_conversion(va_list arg)
+{
+	char *a;
+	int x, count = 0;
+
+	a = va_arg(arg, char *);
+	for (x = 0; a[x] != '\0'; x++)
+	{
+		write(STDOUT_FILENO, &a[x], 1);
+		count++;
+	}
+
+	return (count);
+}
+
+/**
  * _printf - produces output according to a format
  * @format: character string containing zero or more directives
  * Return: the number of characters printed
@@ -42,6 +63,11 @@ int _printf(const char *format, ...)
 			if (format[a + 1] == 'c')
 			{
 				count += char_conversion(arg);
+				a++;
+			}
+			else if (format[a + 1] == 's')
+			{
+				count += string_conversion(arg);
 				a++;
 			}
 		}
