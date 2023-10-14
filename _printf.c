@@ -3,6 +3,21 @@
 #include <unistd.h>
 
 /**
+ * char_conversion - deals with %c specifier
+ * @arg: argument
+ * Return: 1
+*/
+
+int char_conversion(va_list arg)
+{
+	char a;
+
+	a = va_arg(arg, int);
+	write(STDOUT_FILENO, &a, 1);
+	return (1);
+}
+
+/**
  * _printf - produces output according to a format
  * @format: character string containing zero or more directives
  * Return: the number of characters printed
@@ -22,19 +37,16 @@ int _printf(const char *format, ...)
 			count++;
 			write(STDOUT_FILENO, &format[a], 1);
 		}
+		else if (format[a] == '%')
+		{
+			if (format[a + 1] == 'c')
+			{
+				count += char_conversion(arg);
+				a++;
+			}
+		}
 	}
 	va_end(arg);
 	return (count);
 }
 
-/**
- * main - test case without conversions
- * Return: 0
-*/
-
-int main(void)
-{
-	_printf("hello world\n");
-	_printf("0\n");
-	return (0);
-}
